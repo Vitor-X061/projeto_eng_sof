@@ -119,7 +119,7 @@ button.sair {
 button.sair:hover { background-color: #c82333; }
 
 .btn-reset {
-    background-color: #ff9800 !important; /* Laranja para destacar o Reset */
+    background-color: #ff9800 !important;
     margin-top: 40px !important;
 }
 
@@ -140,12 +140,79 @@ button.sair:hover { background-color: #c82333; }
 }
 
 /* =========================================
+   CARDS DE GRUPO (Professor e Aluno)
+   ========================================= */
+.card-grupo {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+}
+
+.card-grupo-tema {
+    color: #1a73e8;
+    margin-bottom: 10px;
+    margin-top: 0;
+    font-size: 15px;
+}
+
+.card-grupo-label {
+    margin-bottom: 5px;
+    font-size: 14px;
+    text-align: left;
+    color: #444;
+}
+
+.card-grupo-alunos {
+    padding-left: 20px;
+    font-size: 14px;
+    text-align: left;
+    margin-bottom: 15px;
+    color: #555;
+}
+
+.card-grupo-contagem {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.card-grupo-acoes {
+    display: flex;
+    gap: 8px;
+}
+
+/* Botões de ação dentro dos cards */
+.btn-acao-verde {
+    flex: 1;
+    margin: 0;
+    padding: 8px;
+    background-color: #28a745;
+    font-size: 14px;
+}
+
+.btn-acao-verde:hover { background-color: #218838; }
+
+.btn-acao-vermelho {
+    flex: 1;
+    margin: 0;
+    padding: 8px;
+    background-color: #dc3545;
+    font-size: 14px;
+}
+
+.btn-acao-vermelho:hover { background-color: #c82333; }
+
+/* =========================================
    ÁREA DO CHAT E ANEXOS
    ========================================= */
 .chat-container {
     border: 1px solid #ccc;
     height: 300px;
-    overflow-y: scroll;
+    /* CORREÇÃO: era 'scroll' (barra sempre visível), agora 'auto' */
+    overflow-y: auto;
     padding: 15px;
     margin-bottom: 15px;
     background: #fafafa;
@@ -155,6 +222,62 @@ button.sair:hover { background-color: #c82333; }
     gap: 10px;
 }
 
+.chat-vazio {
+    text-align: center;
+    color: #999;
+    font-size: 14px;
+    margin-top: 50px;
+}
+
+/* Bolhas de mensagem */
+.bolha-wrapper {
+    display: flex;
+}
+
+.wrapper-direita { justify-content: flex-end; }
+.wrapper-esquerda { justify-content: flex-start; }
+
+.bolha {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    /* CORREÇÃO: evita que URLs ou palavras longas quebrem o layout */
+    word-break: break-word;
+    max-width: 80%;
+    text-align: left;
+}
+
+.bolha-minha    { background-color: #dcf8c6; }
+.bolha-professor { background-color: #cce5ff; }
+.bolha-outro    { background-color: #ffffff; }
+
+.bolha-autor {
+    font-size: 11px;
+    color: #666;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.autor-professor { color: #004085; }
+
+.bolha-texto {
+    font-size: 14px;
+    color: #333;
+    display: block;
+}
+
+/* MELHORIA: horário da mensagem */
+.bolha-horario {
+    font-size: 10px;
+    color: #999;
+    display: block;
+    text-align: right;
+    margin-top: 4px;
+}
+
+/* =========================================
+   ÁREA DE ENVIO DE MENSAGEM
+   ========================================= */
 .area-envio-mensagem {
     display: flex;
     gap: 10px;
@@ -187,6 +310,7 @@ button.sair:hover { background-color: #c82333; }
 .btn-anexo:hover { background-color: #5a6268; }
 
 .menu-anexo {
+    /* Começa fechado — o JS controla display: block */
     display: none;
     position: absolute;
     bottom: 100%;
@@ -208,6 +332,7 @@ button.sair:hover { background-color: #c82333; }
     text-align: left;
     padding: 10px;
     font-weight: normal;
+    font-size: 14px;
 }
 
 .btn-opcao-anexo:hover { background-color: #f1f1f1; }
