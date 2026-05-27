@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HubClass - O Hub da sua Sala de Aula</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <div id="tela-login" class="tela ativa">
+        <h1 class="titulo-hubclass">HubClass</h1>
+        <p class="slogan-hubclass">Conectando professores e grupos de trabalho.</p>
+        
+        <p style="margin-top: 30px;">Selecione o seu perfil de acesso:</p>
+        <button id="btn-login-prof">Entrar como Professor</button>
+        <button id="btn-login-aluno">Entrar como Aluno</button>
+        
+        <button id="btn-resetar-dados" class="sair btn-reset">Limpar Dados do Sistema</button>
+    </div>
+
+    <div id="tela-professor" class="tela">
+        <h2>Painel do Professor</h2>
+        <div class="controle-criacao">
+            <input type="text" id="nome-tema" placeholder="Digite o tema do trabalho (Ex: Inteligência Artificial)">
+            <button id="btn-criar-grupo">Criar Novo Grupo</button>
+        </div>
+        
+        <h3>Grupos Criados (Salas)</h3>
+        <div id="lista-grupos-professor">
+            </div>
+        <button class="sair" id="btn-sair-prof">Sair da Conta</button>
+    </div>
+
+    <div id="tela-aluno" class="tela">
+        <h2>Painel do Aluno</h2>
+        <input type="text" id="nome-aluno" placeholder="Digite seu nome completo para entrar">
+        
+        <h3>Grupos Disponíveis para Entrar</h3>
+        <div id="lista-grupos-aluno">
+            </div>
+        <button class="sair" id="btn-sair-aluno">Sair da Conta</button>
+    </div>
+
+    <div id="tela-grupo-interna" class="tela">
+        <h2 id="titulo-grupo-interno">Tema do Grupo</h2>
+        
+        <div id="chat-container" class="chat-container">
+            </div>
+        
+        <div class="area-envio-mensagem">
+            <div class="container-anexo">
+                <button id="btn-anexo" class="btn-anexo" title="Anexar arquivo">📎</button>
+                <div id="menu-anexo" class="menu-anexo">
+                    <button class="btn-opcao-anexo" style="border-bottom: 1px solid #eee;">📄 Documentos</button>
+                    <button class="btn-opcao-anexo">📷 Vídeos e Fotos</button>
+                </div>
+            </div>
+
+            <input type="text" id="input-mensagem" class="input-mensagem" placeholder="Escreva a sua mensagem...">
+            <button id="btn-enviar-mensagem" class="btn-enviar">Enviar</button>
+        </div>
+        
+        <button class="sair" id="btn-voltar-painel-aluno">Voltar ao Painel</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

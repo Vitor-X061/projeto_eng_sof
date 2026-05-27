@@ -1,0 +1,213 @@
+/* =========================================
+   ESTRUTURA PRINCIPAL E RESET
+   ========================================= */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 500px;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* =========================================
+   LÓGICA DE EXIBIÇÃO DAS TELAS
+   ========================================= */
+.tela { display: none; }
+
+.tela.ativa {
+    display: block;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================
+   TIPOGRAFIA, TÍTULOS E IDENTIDADE VISUAL
+   ========================================= */
+h1, h2 {
+    text-align: center;
+    color: #1a73e8;
+    margin-bottom: 20px;
+}
+
+.titulo-hubclass {
+    color: #1a73e8;
+    font-size: 34px;
+    margin-bottom: 5px;
+}
+
+.slogan-hubclass {
+    font-weight: bold;
+    color: #555;
+    text-align: center;
+}
+
+h3 {
+    margin-top: 25px;
+    margin-bottom: 15px;
+    color: #444;
+    border-bottom: 2px solid #f0f2f5;
+    padding-bottom: 5px;
+}
+
+p {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #666;
+}
+
+/* =========================================
+   FORMULÁRIOS E BOTÕES GERAIS
+   ========================================= */
+input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus {
+    border-color: #1a73e8;
+    outline: none;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover { background-color: #1557b0; }
+
+button.sair {
+    background-color: #dc3545;
+    margin-top: 20px;
+}
+
+button.sair:hover { background-color: #c82333; }
+
+.btn-reset {
+    background-color: #ff9800 !important; /* Laranja para destacar o Reset */
+    margin-top: 40px !important;
+}
+
+.btn-reset:hover { background-color: #e68a00 !important; }
+
+/* =========================================
+   ÁREA DO PROFESSOR
+   ========================================= */
+.controle-criacao {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+}
+
+#lista-grupos-professor, #lista-grupos-aluno {
+    min-height: 100px;
+}
+
+/* =========================================
+   ÁREA DO CHAT E ANEXOS
+   ========================================= */
+.chat-container {
+    border: 1px solid #ccc;
+    height: 300px;
+    overflow-y: scroll;
+    padding: 15px;
+    margin-bottom: 15px;
+    background: #fafafa;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.area-envio-mensagem {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.input-mensagem {
+    margin-bottom: 0 !important;
+    flex-grow: 1;
+}
+
+.btn-enviar {
+    width: auto;
+    margin-bottom: 0;
+    padding: 0 20px;
+}
+
+.container-anexo {
+    position: relative;
+}
+
+.btn-anexo {
+    width: auto;
+    margin-bottom: 0;
+    padding: 10px 15px;
+    background-color: #6c757d;
+}
+
+.btn-anexo:hover { background-color: #5a6268; }
+
+.menu-anexo {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    margin-bottom: 5px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    width: 170px;
+    z-index: 10;
+}
+
+.btn-opcao-anexo {
+    background: transparent;
+    color: #333;
+    margin: 0;
+    border-radius: 0;
+    text-align: left;
+    padding: 10px;
+    font-weight: normal;
+}
+
+.btn-opcao-anexo:hover { background-color: #f1f1f1; }
