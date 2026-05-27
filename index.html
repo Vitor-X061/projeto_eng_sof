@@ -3,74 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HubClass - O Hub da sua Sala de Aula</title>
+    <title>HubClass</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="container">
-
-    <!-- TELA DE LOGIN -->
+    <!-- ======================== TELA DE LOGIN ======================== -->
     <div id="tela-login" class="tela ativa">
-        <h1 class="titulo-hubclass">HubClass</h1>
-        <p class="slogan-hubclass">Conectando professores e grupos de trabalho.</p>
-
-        <p style="margin-top: 30px;">Selecione o seu perfil de acesso:</p>
-        <button id="btn-login-prof">Entrar como Professor</button>
-        <button id="btn-login-aluno">Entrar como Aluno</button>
-
-        <button id="btn-resetar-dados" class="sair btn-reset">Limpar Dados do Sistema</button>
+        <div class="login-card">
+            <h1 class="titulo-hubclass">HubClass</h1>
+            <p class="slogan-hubclass">Conectando professores e grupos de trabalho.</p>
+            <button id="btn-login-prof">Entrar como Professor</button>
+            <button id="btn-login-aluno" class="btn-outline">Entrar como Aluno</button>
+            <button id="btn-resetar-dados" class="btn-reset">Limpar Dados do Sistema</button>
+        </div>
     </div>
 
-    <!-- TELA DO PROFESSOR -->
+    <!-- ======================== TELA DO PROFESSOR ======================== -->
     <div id="tela-professor" class="tela">
-        <h2>Painel do Professor</h2>
-        <div class="controle-criacao">
-            <!-- MELHORIA: autocomplete off evita sugestões indesejadas -->
-            <input type="text" id="nome-tema" autocomplete="off" placeholder="Digite o tema do trabalho (Ex: Inteligência Artificial)">
-            <button id="btn-criar-grupo">Criar Novo Grupo</button>
+        <div class="topbar">
+            <span class="topbar-logo">HubClass</span>
+            <span class="topbar-titulo">Painel do Professor</span>
+            <span class="topbar-badge" id="badge-grupos-prof">0 grupos</span>
+            <button class="sair" id="btn-sair-prof">Sair</button>
         </div>
 
-        <h3>Grupos Criados (Salas)</h3>
-        <div id="lista-grupos-professor"></div>
-        <button class="sair" id="btn-sair-prof">Sair da Conta</button>
-    </div>
-
-    <!-- TELA DO ALUNO -->
-    <div id="tela-aluno" class="tela">
-        <h2>Painel do Aluno</h2>
-        <!-- MELHORIA: autocomplete off evita sugestões indesejadas -->
-        <input type="text" id="nome-aluno" autocomplete="off" placeholder="Digite seu nome completo para entrar">
-
-        <h3>Grupos Disponíveis para Entrar</h3>
-        <div id="lista-grupos-aluno"></div>
-        <button class="sair" id="btn-sair-aluno">Sair da Conta</button>
-    </div>
-
-    <!-- TELA INTERNA DO GRUPO (Chat) -->
-    <div id="tela-grupo-interna" class="tela">
-        <h2 id="titulo-grupo-interno">Tema do Grupo</h2>
-
-        <div id="chat-container" class="chat-container" role="log" aria-live="polite" aria-label="Mensagens do grupo"></div>
-
-        <div class="area-envio-mensagem">
-            <div class="container-anexo">
-                <button id="btn-anexo" class="btn-anexo" title="Anexar arquivo" aria-label="Anexar arquivo">📎</button>
-                <div id="menu-anexo" class="menu-anexo" role="menu">
-                    <button class="btn-opcao-anexo" role="menuitem" style="border-bottom: 1px solid #eee;">📄 Documentos</button>
-                    <button class="btn-opcao-anexo" role="menuitem">📷 Vídeos e Fotos</button>
+        <div class="painel-layout">
+            <!-- Sidebar com lista de grupos -->
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <h3>Grupos criados</h3>
+                    <div id="lista-grupos-sidebar"></div>
                 </div>
             </div>
 
-            <!-- MELHORIA: autocomplete off no campo de mensagem -->
-            <input type="text" id="input-mensagem" class="input-mensagem" autocomplete="off" placeholder="Escreva a sua mensagem..." aria-label="Campo de mensagem">
-            <button id="btn-enviar-mensagem" class="btn-enviar" aria-label="Enviar mensagem">Enviar</button>
-        </div>
+            <!-- Conteúdo principal -->
+            <div class="painel-main">
+                <h2>Criar novo grupo</h2>
+                <p class="subtitulo">Defina um tema e crie uma sala para seus alunos.</p>
 
-        <button class="sair" id="btn-voltar-painel-aluno">Voltar ao Painel</button>
+                <div class="controle-criacao">
+                    <input type="text" id="nome-tema" autocomplete="off" placeholder="Tema do trabalho (Ex: Inteligência Artificial)">
+                    <button id="btn-criar-grupo">+ Criar Grupo</button>
+                </div>
+
+                <h3>Todos os grupos</h3>
+                <div class="grupos-grid" id="lista-grupos-professor"></div>
+            </div>
+        </div>
     </div>
 
-</div>
+    <!-- ======================== TELA DO ALUNO ======================== -->
+    <div id="tela-aluno" class="tela">
+        <div class="topbar">
+            <span class="topbar-logo">HubClass</span>
+            <span class="topbar-titulo">Painel do Aluno</span>
+            <button class="sair" id="btn-sair-aluno">Sair</button>
+        </div>
+
+        <div class="painel-layout">
+            <div class="painel-main">
+                <h2>Entrar em um grupo</h2>
+                <p class="subtitulo">Digite seu nome e escolha o grupo do seu trabalho.</p>
+
+                <input type="text" id="nome-aluno" autocomplete="off" placeholder="Seu nome completo" style="max-width: 420px;">
+
+                <h3>Grupos disponíveis</h3>
+                <div class="grupos-grid" id="lista-grupos-aluno"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================== TELA DO CHAT ======================== -->
+    <div id="tela-grupo-interna" class="tela">
+        <div class="topbar">
+            <span class="topbar-logo">HubClass</span>
+            <span class="topbar-titulo" id="titulo-grupo-interno">Grupo</span>
+            <span class="topbar-badge" id="badge-membros">0 membros</span>
+            <button class="sair" id="btn-voltar-painel-aluno">← Voltar</button>
+        </div>
+
+        <div class="chat-layout">
+            <!-- Sidebar com membros -->
+            <div class="chat-sidebar">
+                <h3>Participantes</h3>
+                <div id="lista-membros-chat"></div>
+            </div>
+
+            <!-- Área principal do chat -->
+            <div class="chat-main">
+                <div id="chat-container" class="chat-container" role="log" aria-live="polite"></div>
+
+                <div class="area-envio-mensagem">
+                    <div class="container-anexo">
+                        <button id="btn-anexo" class="btn-anexo" title="Anexar arquivo" aria-label="Anexar arquivo">📎</button>
+                        <div id="menu-anexo" class="menu-anexo" role="menu">
+                            <button class="btn-opcao-anexo" role="menuitem" style="border-bottom:1px solid #f0e0e0;">📄 Documentos</button>
+                            <button class="btn-opcao-anexo" role="menuitem">📷 Vídeos e Fotos</button>
+                        </div>
+                    </div>
+                    <input type="text" id="input-mensagem" class="input-mensagem" autocomplete="off" placeholder="Escreva sua mensagem..." aria-label="Campo de mensagem">
+                    <button id="btn-enviar-mensagem" class="btn-enviar">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <script src="script.js"></script>
 </body>

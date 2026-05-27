@@ -1,21 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     /* =========================================
-       1. VARIÁVEIS DE SESSÃO E NAVEGAÇÃO
+       1. NAVEGAÇÃO
        ========================================= */
     const telas = document.querySelectorAll('.tela');
-
     let perfilAtual = "";
     let grupoAtualId = null;
     let usuarioAtualNome = "";
 
-    function mudarTela(idTelaDestino) {
-        telas.forEach(tela => tela.classList.remove('ativa'));
-        document.getElementById(idTelaDestino).classList.add('ativa');
-
-        if (idTelaDestino === 'tela-professor') renderizarProfessor();
-        if (idTelaDestino === 'tela-aluno') renderizarAluno();
-        if (idTelaDestino === 'tela-login') document.title = "HubClass";
+    function mudarTela(id) {
+        telas.forEach(t => t.classList.remove('ativa'));
+        document.getElementById(id).classList.add('ativa');
+        if (id === 'tela-professor') renderizarProfessor();
+        if (id === 'tela-aluno')     renderizarAluno();
+        if (id === 'tela-login')     document.title = "HubClass";
     }
 
     document.getElementById('btn-login-prof').addEventListener('click', () => {
@@ -34,16 +32,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('btn-voltar-painel-aluno').addEventListener('click', () => {
         document.title = "HubClass";
-        if (perfilAtual === "professor") {
-            mudarTela('tela-professor');
-        } else {
-            mudarTela('tela-aluno');
-        }
+        mudarTela(perfilAtual === "professor" ? 'tela-professor' : 'tela-aluno');
     });
 
     document.getElementById('btn-resetar-dados').addEventListener('click', () => {
-        const confirmacao = confirm("Tem certeza que deseja apagar todos os grupos e mensagens? Isso não pode ser desfeito.");
-        if (confirmacao) {
+        if (confirm("Tem certeza que deseja apagar todos os grupos e mensagens? Isso não pode ser desfeito.")) {
             localStorage.removeItem('bancoDeGruposAcademico');
             alert("Sistema resetado com sucesso!");
             window.location.reload();
@@ -51,21 +44,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /* =========================================
-       2. MENU DE ANEXO (CORREÇÃO: evento faltando)
+       2. MENU DE ANEXO
        ========================================= */
-    const btnAnexo = document.getElementById('btn-anexo');
+    const btnAnexo  = document.getElementById('btn-anexo');
     const menuAnexo = document.getElementById('menu-anexo');
 
     btnAnexo.addEventListener('click', (e) => {
         e.stopPropagation();
-        const aberto = menuAnexo.style.display === 'block';
-        menuAnexo.style.display = aberto ? 'none' : 'block';
+        menuAnexo.style.display = menuAnexo.style.display === 'block' ? 'none' : 'block';
     });
 
-    // Fecha o menu ao clicar em qualquer lugar fora dele
-    document.addEventListener('click', () => {
-        menuAnexo.style.display = 'none';
-    });
+    document.addEventListener('click', () => { menuAnexo.style.display = 'none'; });
 
     document.querySelectorAll('.btn-opcao-anexo').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -75,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /* =========================================
-       3. BANCO DE DADOS (LOCALSTORAGE)
+       3. BANCO DE DADOS
        ========================================= */
     function obterGrupos() {
         const dados = localStorage.getItem('bancoDeGruposAcademico');
@@ -87,93 +76,98 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* =========================================
-       4. LÓGICA DO PROFESSOR
+       4. PROFESSOR
        ========================================= */
     document.getElementById('btn-criar-grupo').addEventListener('click', criarGrupo);
-
-    // Permite criar grupo pressionando Enter no campo de tema
     document.getElementById('nome-tema').addEventListener('keydown', (e) => {
         if (e.key === 'Enter') criarGrupo();
     });
 
     function criarGrupo() {
-        const inputTema = document.getElementById('nome-tema');
-        const temaTrabalho = inputTema.value.trim();
-
-        if (temaTrabalho === "") {
-            alert("Por favor, digite o tema do trabalho.");
-            return;
-        }
+        const input = document.getElementById('nome-tema');
+        const tema  = input.value.trim();
+        if (!tema) { alert("Digite o tema do trabalho."); return; }
 
         const grupos = obterGrupos();
-
-        // CORREÇÃO: verifica duplicatas antes de criar
-        const temaDuplicado = grupos.some(g => g.tema.toLowerCase() === temaTrabalho.toLowerCase());
-        if (temaDuplicado) {
-            alert(`Já existe um grupo com o tema "${temaTrabalho}". Escolha um nome diferente.`);
+        if (grupos.some(g => g.tema.toLowerCase() === tema.toLowerCase())) {
+            alert(`Já existe um grupo com o tema "${tema}".`);
             return;
         }
 
-        const novoGrupo = {
-            id: Date.now(),
-            tema: temaTrabalho,
-            alunos: [],
-            mensagens: []
-        };
-
-        grupos.push(novoGrupo);
+        grupos.push({ id: Date.now(), tema, alunos: [], mensagens: [] });
         salvarGrupos(grupos);
-        inputTema.value = "";
+        input.value = "";
         renderizarProfessor();
     }
 
     function renderizarProfessor() {
-        const divGrupos = document.getElementById('lista-grupos-professor');
         const grupos = obterGrupos();
-        divGrupos.innerHTML = "";
+
+        // Badge no topbar
+        const badge = document.getElementById('badge-grupos-prof');
+        if (badge) badge.textContent = `${grupos.length} grupo${grupos.length !== 1 ? 's' : ''}`;
+
+        // Sidebar
+        const sidebar = document.getElementById('lista-grupos-sidebar');
+        sidebar.innerHTML = "";
+        grupos.forEach(g => {
+            const div = document.createElement('div');
+            div.className = 'card-grupo-side';
+            div.innerHTML = `
+                <h4>${g.tema}</h4>
+                <div class="meta">${g.alunos.length} aluno(s) <span class="chip-msgs">${(g.mensagens||[]).length} msgs</span></div>
+            `;
+            div.addEventListener('click', () => {
+                grupoAtualId = g.id;
+                mudarTela('tela-grupo-interna');
+                renderizarChat();
+            });
+            sidebar.appendChild(div);
+        });
+
+        // Grid principal
+        const grid = document.getElementById('lista-grupos-professor');
+        grid.innerHTML = "";
 
         if (grupos.length === 0) {
-            divGrupos.innerHTML = "<p>Nenhum grupo criado ainda.</p>";
+            grid.innerHTML = "<p style='color:#999;font-size:14px;'>Nenhum grupo criado ainda.</p>";
             return;
         }
 
         grupos.forEach(grupo => {
-            let listaAlunosHTML = grupo.alunos.length > 0
-                ? grupo.alunos.map(aluno => `<li>${aluno}</li>`).join('')
-                : "<li>Nenhum aluno entrou ainda.</li>";
+            const listaAlunos = grupo.alunos.length > 0
+                ? grupo.alunos.map(a => `<li>${a}</li>`).join('')
+                : "<li style='color:#bbb;'>Nenhum aluno entrou ainda.</li>";
 
             const div = document.createElement('div');
             div.className = 'card-grupo';
             div.innerHTML = `
-                <h4 class="card-grupo-tema">Tema: ${grupo.tema}</h4>
-                <p class="card-grupo-label"><strong>Alunos no grupo:</strong></p>
-                <ul class="card-grupo-alunos">${listaAlunosHTML}</ul>
+                <h4 class="card-grupo-tema">${grupo.tema}</h4>
+                <p class="card-grupo-meta">${grupo.alunos.length} aluno(s) · <span class="chip-msgs">${(grupo.mensagens||[]).length} msgs</span></p>
+                <p class="card-grupo-label"><strong>Alunos:</strong></p>
+                <ul class="card-grupo-alunos">${listaAlunos}</ul>
                 <div class="card-grupo-acoes">
-                    <button class="btn-acessar-prof btn-acao-verde" data-id="${grupo.id}">Acessar Chat</button>
-                    <button class="btn-excluir-grupo btn-acao-vermelho" data-id="${grupo.id}">Excluir Grupo</button>
+                    <button class="btn-acao-vermelho btn-acessar-prof" data-id="${grupo.id}">Acessar Chat</button>
+                    <button class="btn-acao-outline btn-excluir-grupo" data-id="${grupo.id}">Excluir</button>
                 </div>
             `;
-            divGrupos.appendChild(div);
+            grid.appendChild(div);
         });
 
-        // Evento: professor entra no chat
-        document.querySelectorAll('.btn-acessar-prof').forEach(botao => {
-            botao.addEventListener('click', (e) => {
+        document.querySelectorAll('.btn-acessar-prof').forEach(btn => {
+            btn.addEventListener('click', (e) => {
                 grupoAtualId = parseInt(e.target.getAttribute('data-id'));
                 mudarTela('tela-grupo-interna');
                 renderizarChat();
             });
         });
 
-        // MELHORIA: professor pode excluir grupo individual
-        document.querySelectorAll('.btn-excluir-grupo').forEach(botao => {
-            botao.addEventListener('click', (e) => {
+        document.querySelectorAll('.btn-excluir-grupo').forEach(btn => {
+            btn.addEventListener('click', (e) => {
                 const id = parseInt(e.target.getAttribute('data-id'));
-                const grupo = obterGrupos().find(g => g.id === id);
-                const confirmacao = confirm(`Excluir o grupo "${grupo.tema}"? Esta ação não pode ser desfeita.`);
-                if (confirmacao) {
-                    const gruposAtualizados = obterGrupos().filter(g => g.id !== id);
-                    salvarGrupos(gruposAtualizados);
+                const g  = obterGrupos().find(x => x.id === id);
+                if (confirm(`Excluir o grupo "${g.tema}"?`)) {
+                    salvarGrupos(obterGrupos().filter(x => x.id !== id));
                     renderizarProfessor();
                 }
             });
@@ -181,15 +175,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* =========================================
-       5. LÓGICA DO ALUNO (Escolher Grupo)
+       5. ALUNO
        ========================================= */
     function renderizarAluno() {
-        const divGrupos = document.getElementById('lista-grupos-aluno');
+        const grid   = document.getElementById('lista-grupos-aluno');
         const grupos = obterGrupos();
-        divGrupos.innerHTML = "";
+        grid.innerHTML = "";
 
         if (grupos.length === 0) {
-            divGrupos.innerHTML = "<p>O professor ainda não criou nenhum grupo.</p>";
+            grid.innerHTML = "<p style='color:#999;font-size:14px;'>O professor ainda não criou nenhum grupo.</p>";
             return;
         }
 
@@ -199,132 +193,133 @@ document.addEventListener('DOMContentLoaded', () => {
             div.innerHTML = `
                 <h4 class="card-grupo-tema">${grupo.tema}</h4>
                 <p class="card-grupo-contagem">${grupo.alunos.length} aluno(s) participando</p>
-                <button class="btn-entrar" data-id="${grupo.id}">Entrar neste Grupo</button>
+                <div class="card-grupo-acoes">
+                    <button class="btn-acao-vermelho btn-entrar" data-id="${grupo.id}">Entrar no Grupo</button>
+                </div>
             `;
-            divGrupos.appendChild(div);
+            grid.appendChild(div);
         });
 
-        document.querySelectorAll('.btn-entrar').forEach(botao => {
-            botao.addEventListener('click', (e) => {
-                const idDoGrupo = parseInt(e.target.getAttribute('data-id'));
-                entrarNoGrupo(idDoGrupo);
+        document.querySelectorAll('.btn-entrar').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                entrarNoGrupo(parseInt(e.target.getAttribute('data-id')));
             });
         });
     }
 
     function entrarNoGrupo(idGrupo) {
-        const inputNome = document.getElementById('nome-aluno');
-        const nomeDoAluno = inputNome.value.trim();
-
-        if (nomeDoAluno === "") {
-            alert("Digite o seu nome antes de entrar num grupo!");
-            return;
-        }
-
-        // CORREÇÃO: valida comprimento mínimo e máximo do nome
-        if (nomeDoAluno.length < 3) {
-            alert("Por favor, digite seu nome completo (mínimo 3 caracteres).");
-            return;
-        }
-        if (nomeDoAluno.length > 60) {
-            alert("Nome muito longo. Use no máximo 60 caracteres.");
-            return;
-        }
+        const nome = document.getElementById('nome-aluno').value.trim();
+        if (!nome)          { alert("Digite o seu nome antes de entrar."); return; }
+        if (nome.length < 3){ alert("Nome muito curto (mínimo 3 caracteres)."); return; }
+        if (nome.length > 60){ alert("Nome muito longo (máximo 60 caracteres)."); return; }
 
         let grupos = obterGrupos();
-        grupos = grupos.map(grupo => {
-            if (grupo.id === idGrupo && !grupo.alunos.includes(nomeDoAluno)) {
-                grupo.alunos.push(nomeDoAluno);
-            }
-            return grupo;
+        grupos = grupos.map(g => {
+            if (g.id === idGrupo && !g.alunos.includes(nome)) g.alunos.push(nome);
+            return g;
         });
 
         salvarGrupos(grupos);
-        usuarioAtualNome = nomeDoAluno;
-        grupoAtualId = idGrupo;
+        usuarioAtualNome = nome;
+        grupoAtualId     = idGrupo;
         mudarTela('tela-grupo-interna');
         renderizarChat();
     }
 
     /* =========================================
-       6. LÓGICA DO CHAT (Área Interna)
+       6. CHAT
        ========================================= */
-    function formatarHorario(timestamp) {
-        if (!timestamp) return "";
-        const data = new Date(timestamp);
-        const h = String(data.getHours()).padStart(2, '0');
-        const m = String(data.getMinutes()).padStart(2, '0');
-        return `${h}:${m}`;
+    function formatarHorario(ts) {
+        if (!ts) return "";
+        const d = new Date(ts);
+        return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    }
+
+    function inicialDe(nome) {
+        return nome.trim().charAt(0).toUpperCase();
     }
 
     function renderizarChat() {
-        const grupos = obterGrupos();
-        const grupo = grupos.find(g => g.id === grupoAtualId);
+        const grupo = obterGrupos().find(g => g.id === grupoAtualId);
         if (!grupo) return;
 
-        // MELHORIA: atualiza o título da aba do navegador
         document.title = `${grupo.tema} — HubClass`;
-        document.getElementById('titulo-grupo-interno').innerText = "Grupo: " + grupo.tema;
+        document.getElementById('titulo-grupo-interno').innerText = grupo.tema;
 
-        const chatContainer = document.getElementById('chat-container');
+        // Badge de membros
+        const badge = document.getElementById('badge-membros');
+        if (badge) badge.textContent = `${grupo.alunos.length + 1} membro(s)`;
 
+        // Sidebar de membros
+        const listaMembros = document.getElementById('lista-membros-chat');
+        if (listaMembros) {
+            listaMembros.innerHTML = "";
+
+            // Professor sempre aparece primeiro
+            const divProf = document.createElement('div');
+            divProf.className = 'membro-item';
+            divProf.innerHTML = `<div class="avatar prof-avatar">P</div> Professor(a)`;
+            listaMembros.appendChild(divProf);
+
+            grupo.alunos.forEach(aluno => {
+                const div = document.createElement('div');
+                div.className = 'membro-item';
+                div.innerHTML = `<div class="avatar">${inicialDe(aluno)}</div> ${aluno}`;
+                listaMembros.appendChild(div);
+            });
+        }
+
+        // Mensagens
+        const chat = document.getElementById('chat-container');
         if (!grupo.mensagens || grupo.mensagens.length === 0) {
-            chatContainer.innerHTML = "<p class='chat-vazio'>Nenhuma mensagem ainda.</p>";
+            chat.innerHTML = "<p class='chat-vazio'>Nenhuma mensagem ainda. Seja o primeiro a escrever!</p>";
             return;
         }
 
-        // CORREÇÃO: monta todo o HTML de uma vez antes de inserir no DOM
-        let htmlMensagens = "";
+        let html = "";
         grupo.mensagens.forEach(msg => {
-            const isMinhaMensagem = (msg.autor === usuarioAtualNome);
-            const isProfessor = (msg.autor === "Professor(a)");
+            const isMinha = (msg.autor === usuarioAtualNome);
+            const isProf  = (msg.autor === "Professor(a)");
             const horario = formatarHorario(msg.timestamp);
-            const iconeAutor = isProfessor ? "👨‍🏫 " : "";
+            const icone   = isProf ? "👨‍🏫 " : "";
 
-            let classeBolha = "bolha-outro";
-            if (isMinhaMensagem) classeBolha = "bolha-minha";
-            else if (isProfessor) classeBolha = "bolha-professor";
+            let classeBolha  = "bolha-outro";
+            let classeAutor  = "bolha-autor";
+            if (isMinha) { classeBolha = "bolha-minha";     classeAutor += " autor-minha"; }
+            else if (isProf) { classeBolha = "bolha-professor"; classeAutor += " autor-professor"; }
 
-            htmlMensagens += `
-                <div class="bolha-wrapper ${isMinhaMensagem ? 'wrapper-direita' : 'wrapper-esquerda'}">
+            html += `
+                <div class="bolha-wrapper ${isMinha ? 'wrapper-direita' : 'wrapper-esquerda'}">
                     <div class="bolha ${classeBolha}">
-                        <strong class="bolha-autor ${isProfessor ? 'autor-professor' : ''}">${iconeAutor}${msg.autor}</strong>
+                        <strong class="${classeAutor}">${icone}${msg.autor}</strong>
                         <span class="bolha-texto">${msg.texto}</span>
                         ${horario ? `<span class="bolha-horario">${horario}</span>` : ''}
                     </div>
-                </div>
-            `;
+                </div>`;
         });
 
-        chatContainer.innerHTML = htmlMensagens;
-        chatContainer.scrollTop = chatContainer.scrollHeight;
+        chat.innerHTML = html;
+        chat.scrollTop = chat.scrollHeight;
     }
 
     function enviarMensagem() {
-        const inputMsg = document.getElementById('input-mensagem');
-        const textoDaMensagem = inputMsg.value.trim();
-        if (textoDaMensagem === "") return;
+        const input = document.getElementById('input-mensagem');
+        const texto = input.value.trim();
+        if (!texto) return;
 
         let grupos = obterGrupos();
-        const index = grupos.findIndex(g => g.id === grupoAtualId);
-        if (index === -1) return;
+        const idx  = grupos.findIndex(g => g.id === grupoAtualId);
+        if (idx === -1) return;
 
-        if (!grupos[index].mensagens) grupos[index].mensagens = [];
-
-        grupos[index].mensagens.push({
-            autor: usuarioAtualNome,
-            texto: textoDaMensagem,
-            timestamp: Date.now() // MELHORIA: salva o horário da mensagem
-        });
+        if (!grupos[idx].mensagens) grupos[idx].mensagens = [];
+        grupos[idx].mensagens.push({ autor: usuarioAtualNome, texto, timestamp: Date.now() });
 
         salvarGrupos(grupos);
-        inputMsg.value = "";
+        input.value = "";
         renderizarChat();
     }
 
     document.getElementById('btn-enviar-mensagem').addEventListener('click', enviarMensagem);
-
-    // CORREÇÃO: enviar mensagem com Enter
     document.getElementById('input-mensagem').addEventListener('keydown', (e) => {
         if (e.key === 'Enter') enviarMensagem();
     });
