@@ -47,12 +47,12 @@ body {
    ========================================= */
 h1, h2 {
     text-align: center;
-    color: #1a73e8;
+    color: #e81a1a;
     margin-bottom: 20px;
 }
 
 .titulo-hubclass {
-    color: #1a73e8;
+    color: #e81a1a;
     font-size: 34px;
     margin-bottom: 5px;
 }
@@ -91,7 +91,7 @@ input[type="text"] {
 }
 
 input[type="text"]:focus {
-    border-color: #1a73e8;
+    border-color: #e81a1a;
     outline: none;
 }
 
@@ -99,7 +99,7 @@ button {
     width: 100%;
     padding: 12px;
     margin-bottom: 10px;
-    background-color: #1a73e8;
+    background-color: #e81a1a;
     color: white;
     border: none;
     border-radius: 6px;
@@ -109,14 +109,14 @@ button {
     transition: background-color 0.3s;
 }
 
-button:hover { background-color: #1557b0; }
+button:hover { background-color: #db6868; }
 
 button.sair {
-    background-color: #dc3545;
+    background-color: #3b3b3b;
     margin-top: 20px;
 }
 
-button.sair:hover { background-color: #c82333; }
+button.sair:hover { background-color: #9c9999; }
 
 .btn-reset {
     background-color: #ff9800 !important;
@@ -151,7 +151,7 @@ button.sair:hover { background-color: #c82333; }
 }
 
 .card-grupo-tema {
-    color: #1a73e8;
+    color: #e81a1a;
     margin-bottom: 10px;
     margin-top: 0;
     font-size: 15px;
@@ -199,11 +199,11 @@ button.sair:hover { background-color: #c82333; }
     flex: 1;
     margin: 0;
     padding: 8px;
-    background-color: #dc3545;
+    background-color: #646464;
     font-size: 14px;
 }
 
-.btn-acao-vermelho:hover { background-color: #c82333; }
+.btn-acao-vermelho:hover { background-color: #a1a0a0; }
 
 /* =========================================
    ÁREA DO CHAT E ANEXOS
@@ -304,10 +304,10 @@ button.sair:hover { background-color: #c82333; }
     width: auto;
     margin-bottom: 0;
     padding: 10px 15px;
-    background-color: #6c757d;
+    background-color: #d4dee7;
 }
 
-.btn-anexo:hover { background-color: #5a6268; }
+.btn-anexo:hover { background-color: #e7e7e7; }
 
 .menu-anexo {
     /* Começa fechado — o JS controla display: block */
