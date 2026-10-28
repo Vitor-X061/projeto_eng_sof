@@ -620,3 +620,94 @@ p { color: var(--texto-secundario); }
 }
 
 .btn-opcao-anexo:hover { background: var(--vermelho-fundo); color: var(--vermelho); }
+
+/* =========================================
+   HUBCLASS V2 — TURMAS, TRABALHOS E EQUIPES
+   ========================================= */
+[hidden] { display: none !important; }
+
+.aviso-demo { font-size: 12px; line-height: 1.6; margin-top: 10px; color: #606060; }
+.form-sidebar { display: grid; gap: 8px; }
+.form-sidebar label, .campo label, #form-equipe > label {
+  display: block; font-weight: 600; font-size: 13px; margin-bottom: 6px;
+}
+.form-sidebar input, .form-sidebar button { margin: 0; }
+.lista-sidebar { display: grid; gap: 8px; margin-top: 22px; }
+.item-turma {
+  text-align: left; width: 100%; background: #fff; color: var(--texto-principal);
+  border: 1px solid var(--vermelho-borda); font-size: 13px; line-height: 1.5;
+  padding: 10px 12px; margin: 0;
+}
+.item-turma:hover, .item-turma.selecionado {
+  background: var(--vermelho-claro); border-color: var(--vermelho);
+  color: var(--vermelho-escuro);
+}
+.painel-largura { max-width: 1160px; width: 100%; margin-inline: auto; }
+#prof-com-turma { width: 100%; }
+.cabecalho-secao { display: flex; justify-content: space-between; align-items: start; gap: 16px; margin-bottom: 20px; }
+.cabecalho-secao .btn-pequeno { flex-shrink: 0; }
+.eyebrow { color: var(--vermelho); font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
+.bloco-formulario {
+  background: var(--branco); border: 1px solid var(--vermelho-borda);
+  padding: 22px; border-radius: var(--raio-lg); margin-bottom: 28px;
+}
+.bloco-formulario form { width: 100%; }
+.campo { margin-bottom: 14px; }
+.campo input, .campo textarea, .campo select {
+  width: 100%; border: 1.5px solid var(--borda); border-radius: var(--raio);
+  padding: 12px; font: inherit; background: #fff; color: var(--texto-principal);
+}
+.campo textarea { resize: vertical; min-height: 80px; }
+.campo input:focus, .campo textarea:focus, .campo select:focus, #nome-equipe:focus {
+  outline: 2px solid var(--vermelho); outline-offset: 1px;
+}
+.linha-campos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.check-linha { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; font-size: 13px; }
+.check-linha input { width: auto; margin: 0; }
+.btn-pequeno { width: auto; margin: 0; padding: 10px 14px; font-size: 13px; }
+.card-grupo-acoes { flex-wrap: wrap; margin-top: 12px; align-items: center; }
+.card-grupo-acoes .btn-pequeno { flex: 1 1 145px; }
+.estado-vazio, .estado-inline {
+  color: var(--texto-secundario); padding: 20px; border: 1px dashed var(--borda);
+  border-radius: var(--raio); background: #fff; line-height: 1.6;
+}
+.estado-vazio h2 { margin-bottom: 8px; }
+.regras-info { padding: 12px 16px; background: var(--vermelho-claro); border-radius: var(--raio); margin-bottom: 22px; font-size: 13px; }
+.linha-acao { display: flex; gap: 12px; align-items: center; }
+.linha-acao input { flex: 1; margin-bottom: 0; }
+.aviso-discreto { font-size: 12px; color: var(--texto-secundario); line-height: 1.5; }
+.aviso-chat {
+  background: var(--vermelho-claro); padding: 10px 18px; font-size: 12px;
+  line-height: 1.5; border-bottom: 1px solid var(--vermelho-borda);
+}
+#tela-turma-aluno.ativa, #tela-trabalho.ativa { background: var(--fundo-pagina); }
+#tela-turma-aluno .painel-main, #tela-trabalho .painel-main, #tela-aluno .painel-main { flex: 1; overflow: auto; }
+#tela-chat.ativa { background: var(--fundo-pagina); }
+.bolha-texto { white-space: pre-wrap; }
+button:focus-visible, .item-turma:focus-visible { outline: 3px solid #1c548b; outline-offset: 2px; }
+@media (max-width: 840px) {
+  .painel-layout { flex-direction: column; height: auto; overflow: visible; }
+  .sidebar { width: 100%; max-height: 280px; border-right: none; border-bottom: 1px solid var(--borda); }
+  .painel-main { padding: 24px 18px; overflow: visible; }
+  .chat-sidebar { width: 180px; }
+  .chat-container { padding: 16px; }
+  .topbar { padding: 0 14px; gap: 8px; }
+  .topbar-titulo { font-size: 13px; }
+}
+@media (max-width: 520px) {
+  .login-card { padding: 28px 22px; max-width: calc(100% - 24px); }
+  .titulo-hubclass { font-size: 36px; }
+  .topbar-logo { font-size: 17px; }
+  .topbar-badge { display: none; }
+  .linha-campos { grid-template-columns: 1fr; gap: 0; }
+  .cabecalho-secao { flex-direction: column; }
+  .linha-acao { flex-direction: column; align-items: stretch; }
+  .linha-acao .btn-pequeno { width: 100%; }
+  .chat-layout { flex-direction: column; height: auto; min-height: calc(100vh - var(--topbar-h)); }
+  .chat-sidebar { width: 100%; max-height: 105px; overflow-y: auto; padding: 10px 14px; border-right: none; border-bottom: 1px solid var(--borda); }
+  .chat-main { flex: 1; min-height: 60vh; }
+  .chat-container { min-height: 40vh; }
+  .area-envio-mensagem { padding: 10px; }
+  .btn-enviar { padding-inline: 14px; }
+  .bolha { max-width: 88%; }
+}
