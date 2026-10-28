@@ -1,114 +1,185 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HubClass</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="HubClass — organização de turmas, trabalhos e equipes acadêmicas.">
+  <title>HubClass</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <!-- ======================== TELA DE LOGIN ======================== -->
-    <div id="tela-login" class="tela ativa">
-        <div class="login-card">
-            <h1 class="titulo-hubclass">HubClass</h1>
-            <p class="slogan-hubclass">Conectando professores e grupos de trabalho.</p>
-            <button id="btn-login-prof">Entrar como Professor</button>
-            <button id="btn-login-aluno" class="btn-outline">Entrar como Aluno</button>
-            <button id="btn-resetar-dados" class="btn-reset">Limpar Dados do Sistema</button>
-        </div>
+  <section id="tela-login" class="tela ativa" aria-labelledby="titulo-inicio">
+    <div class="login-card">
+      <h1 id="titulo-inicio" class="titulo-hubclass">HubClass</h1>
+      <p class="slogan-hubclass">Conectando professores, turmas e equipes de trabalho.</p>
+      <button type="button" id="btn-login-prof">Entrar como professor</button>
+      <button type="button" id="btn-login-aluno" class="btn-outline">Entrar como aluno</button>
+      <p class="aviso-demo">Protótipo local: ainda não há contas, autenticação ou sincronização entre dispositivos.</p>
     </div>
+  </section>
 
-    <!-- ======================== TELA DO PROFESSOR ======================== -->
-    <div id="tela-professor" class="tela">
-        <div class="topbar">
-            <span class="topbar-logo">HubClass</span>
-            <span class="topbar-titulo">Painel do Professor</span>
-            <span class="topbar-badge" id="badge-grupos-prof">0 grupos</span>
-            <button class="sair" id="btn-sair-prof">Sair</button>
+  <section id="tela-professor" class="tela" aria-labelledby="titulo-professor">
+    <header class="topbar">
+      <span class="topbar-logo">HubClass</span>
+      <span id="titulo-professor" class="topbar-titulo">Painel do professor</span>
+      <span id="badge-turmas" class="topbar-badge">0 turmas</span>
+      <button type="button" class="sair" id="btn-sair-prof">Sair</button>
+    </header>
+    <div class="painel-layout">
+      <aside class="sidebar sidebar-turmas" aria-label="Turmas cadastradas">
+        <div class="sidebar-header">
+          <h3>Minhas turmas</h3>
+          <form id="form-turma" class="form-sidebar">
+            <label for="nome-turma">Nome da turma</label>
+            <input type="text" id="nome-turma" maxlength="80" placeholder="Ex.: Engenharia de Software" required>
+            <button type="submit">+ Criar turma</button>
+          </form>
+          <div id="lista-turmas-prof" class="lista-sidebar"></div>
         </div>
-
-        <div class="painel-layout">
-            <!-- Sidebar com lista de grupos -->
-            <div class="sidebar">
-                <div class="sidebar-header">
-                    <h3>Grupos criados</h3>
-                    <div id="lista-grupos-sidebar"></div>
+      </aside>
+      <main class="painel-main">
+        <div id="prof-sem-turma" class="estado-vazio">
+          <h2>Comece criando uma turma</h2>
+          <p>Depois você poderá cadastrar trabalhos e organizar equipes diferentes em cada atividade.</p>
+        </div>
+        <div id="prof-com-turma" hidden>
+          <div class="cabecalho-secao">
+            <div>
+              <p class="eyebrow">Turma selecionada</p>
+              <h2 id="titulo-turma-prof"></h2>
+              <p id="resumo-turma-prof" class="subtitulo"></p>
+            </div>
+            <button type="button" class="btn-acao-outline btn-pequeno" id="btn-excluir-turma">Excluir turma</button>
+          </div>
+          <section class="bloco-formulario" aria-labelledby="cabecalho-novo-trabalho">
+            <h3 id="cabecalho-novo-trabalho">Criar trabalho</h3>
+            <form id="form-trabalho">
+              <div class="campo">
+                <label for="titulo-trabalho">Título do trabalho</label>
+                <input type="text" id="titulo-trabalho" maxlength="100" required placeholder="Ex.: Inteligência Artificial">
+              </div>
+              <div class="campo">
+                <label for="descricao-trabalho">Orientações (opcional)</label>
+                <textarea id="descricao-trabalho" rows="3" maxlength="1500" placeholder="Instruções para as equipes"></textarea>
+              </div>
+              <div class="linha-campos">
+                <div class="campo">
+                  <label for="prazo-trabalho">Prazo de entrega (opcional)</label>
+                  <input type="date" id="prazo-trabalho">
                 </div>
-            </div>
-
-            <!-- Conteúdo principal -->
-            <div class="painel-main">
-                <h2>Criar novo grupo</h2>
-                <p class="subtitulo">Defina um tema e crie uma sala para seus alunos.</p>
-
-                <div class="controle-criacao">
-                    <input type="text" id="nome-tema" autocomplete="off" placeholder="Tema do trabalho (Ex: Inteligência Artificial)">
-                    <button id="btn-criar-grupo">+ Criar Grupo</button>
+                <div class="campo">
+                  <label for="formacao-equipes">Formação das equipes</label>
+                  <select id="formacao-equipes">
+                    <option value="professor">Definida pelo professor</option>
+                    <option value="alunos">Escolhida pelos alunos</option>
+                  </select>
                 </div>
-
-                <h3>Todos os grupos</h3>
-                <div class="grupos-grid" id="lista-grupos-professor"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ======================== TELA DO ALUNO ======================== -->
-    <div id="tela-aluno" class="tela">
-        <div class="topbar">
-            <span class="topbar-logo">HubClass</span>
-            <span class="topbar-titulo">Painel do Aluno</span>
-            <button class="sair" id="btn-sair-aluno">Sair</button>
-        </div>
-
-        <div class="painel-layout">
-            <div class="painel-main">
-                <h2>Entrar em um grupo</h2>
-                <p class="subtitulo">Digite seu nome e escolha o grupo do seu trabalho.</p>
-
-                <input type="text" id="nome-aluno" autocomplete="off" placeholder="Seu nome completo" style="max-width: 420px;">
-
-                <h3>Grupos disponíveis</h3>
-                <div class="grupos-grid" id="lista-grupos-aluno"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ======================== TELA DO CHAT ======================== -->
-    <div id="tela-grupo-interna" class="tela">
-        <div class="topbar">
-            <span class="topbar-logo">HubClass</span>
-            <span class="topbar-titulo" id="titulo-grupo-interno">Grupo</span>
-            <span class="topbar-badge" id="badge-membros">0 membros</span>
-            <button class="sair" id="btn-voltar-painel-aluno">← Voltar</button>
-        </div>
-
-        <div class="chat-layout">
-            <!-- Sidebar com membros -->
-            <div class="chat-sidebar">
-                <h3>Participantes</h3>
-                <div id="lista-membros-chat"></div>
-            </div>
-
-            <!-- Área principal do chat -->
-            <div class="chat-main">
-                <div id="chat-container" class="chat-container" role="log" aria-live="polite"></div>
-
-                <div class="area-envio-mensagem">
-                    <div class="container-anexo">
-                        <button id="btn-anexo" class="btn-anexo" title="Anexar arquivo" aria-label="Anexar arquivo">📎</button>
-                        <div id="menu-anexo" class="menu-anexo" role="menu">
-                            <button class="btn-opcao-anexo" role="menuitem" style="border-bottom:1px solid #f0e0e0;">📄 Documentos</button>
-                            <button class="btn-opcao-anexo" role="menuitem">📷 Vídeos e Fotos</button>
-                        </div>
-                    </div>
-                    <input type="text" id="input-mensagem" class="input-mensagem" autocomplete="off" placeholder="Escreva sua mensagem..." aria-label="Campo de mensagem">
-                    <button id="btn-enviar-mensagem" class="btn-enviar">Enviar</button>
+              </div>
+              <div class="linha-campos">
+                <div class="campo">
+                  <label for="min-equipe">Mínimo por equipe</label>
+                  <input type="number" id="min-equipe" min="1" max="30" value="2" required>
                 </div>
-            </div>
+                <div class="campo">
+                  <label for="max-equipe">Máximo por equipe</label>
+                  <input type="number" id="max-equipe" min="1" max="30" value="5" required>
+                </div>
+              </div>
+              <label class="check-linha" for="alunos-podem-criar">
+                <input type="checkbox" id="alunos-podem-criar" checked>
+                Alunos podem criar equipes (quando a formação for livre)
+              </label>
+              <button type="submit" class="btn-pequeno">+ Cadastrar trabalho</button>
+            </form>
+          </section>
+          <section aria-labelledby="titulo-lista-trabalhos">
+            <h3 id="titulo-lista-trabalhos">Trabalhos da turma</h3>
+            <div id="lista-trabalhos-prof" class="grupos-grid"></div>
+          </section>
         </div>
+      </main>
     </div>
+  </section>
 
-<script src="script.js"></script>
+  <section id="tela-aluno" class="tela" aria-labelledby="titulo-aluno">
+    <header class="topbar">
+      <span class="topbar-logo">HubClass</span>
+      <span id="titulo-aluno" class="topbar-titulo">Painel do aluno</span>
+      <button type="button" class="sair" id="btn-sair-aluno">Sair</button>
+    </header>
+    <main class="painel-main painel-largura">
+      <h2>Entrar em uma turma</h2>
+      <p class="subtitulo">Digite seu nome para acessar as atividades de uma turma neste navegador.</p>
+      <div class="campo">
+        <label for="nome-aluno">Nome completo do aluno</label>
+        <input type="text" id="nome-aluno" minlength="3" maxlength="60" placeholder="Seu nome completo" autocomplete="name">
+      </div>
+      <h3>Turmas disponíveis</h3>
+      <div class="grupos-grid" id="lista-turmas-aluno"></div>
+    </main>
+  </section>
+
+  <section id="tela-turma-aluno" class="tela" aria-labelledby="titulo-turma-aluno">
+    <header class="topbar">
+      <span class="topbar-logo">HubClass</span>
+      <span id="titulo-turma-aluno" class="topbar-titulo">Turma</span>
+      <button type="button" class="sair" id="btn-voltar-turmas">← Turmas</button>
+    </header>
+    <main class="painel-main painel-largura">
+      <h2>Trabalhos disponíveis</h2>
+      <p class="subtitulo">Cada trabalho tem suas próprias equipes e regras de formação.</p>
+      <div class="grupos-grid" id="lista-trabalhos-aluno"></div>
+    </main>
+  </section>
+
+  <section id="tela-trabalho" class="tela" aria-labelledby="titulo-trabalho-aberto">
+    <header class="topbar">
+      <span class="topbar-logo">HubClass</span>
+      <span id="titulo-trabalho-aberto" class="topbar-titulo">Trabalho</span>
+      <button type="button" class="sair" id="btn-voltar-trabalho">← Voltar</button>
+    </header>
+    <main class="painel-main painel-largura">
+      <p id="contexto-trabalho" class="eyebrow"></p>
+      <h2 id="detalhe-trabalho-titulo"></h2>
+      <p id="detalhe-trabalho-desc" class="subtitulo"></p>
+      <p id="regras-trabalho" class="regras-info"></p>
+      <form id="form-equipe" class="bloco-formulario">
+        <h3>Criar equipe</h3>
+        <label for="nome-equipe">Nome da equipe</label>
+        <div class="linha-acao">
+          <input type="text" id="nome-equipe" maxlength="60" placeholder="Ex.: Equipe Alpha" required>
+          <button type="submit" class="btn-pequeno">+ Criar equipe</button>
+        </div>
+      </form>
+      <h3>Equipes deste trabalho</h3>
+      <div id="lista-equipes" class="grupos-grid"></div>
+    </main>
+  </section>
+
+  <section id="tela-chat" class="tela" aria-labelledby="titulo-chat">
+    <header class="topbar">
+      <span class="topbar-logo">HubClass</span>
+      <span id="titulo-chat" class="topbar-titulo">Equipe</span>
+      <span id="badge-membros" class="topbar-badge">0 membros</span>
+      <button type="button" class="sair" id="btn-voltar-equipes">← Equipes</button>
+    </header>
+    <div class="chat-layout">
+      <aside class="chat-sidebar">
+        <h3>Participantes</h3>
+        <div id="lista-membros-chat"></div>
+      </aside>
+      <main class="chat-main">
+        <div class="aviso-chat">Conversas salvas somente neste navegador. A sincronização online ficará para uma etapa futura.</div>
+        <div id="chat-container" class="chat-container" role="log" aria-live="polite" aria-relevant="additions text"></div>
+        <form id="form-mensagem" class="area-envio-mensagem">
+          <input type="text" id="input-mensagem" class="input-mensagem" maxlength="2000" placeholder="Escreva sua mensagem..." aria-label="Escreva sua mensagem" autocomplete="off" required>
+          <button type="submit" class="btn-enviar">Enviar</button>
+        </form>
+      </main>
+    </div>
+  </section>
+
+  <script src="dados.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
